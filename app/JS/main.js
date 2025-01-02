@@ -12,3 +12,7 @@ function createCards(list) {
   });
 }
 createCards(deck);
+
+let allCards = [];
+deck.forEach((el) => allCards.push(`${el.number} of ${el.suit}`));
+console.log(allCards);
