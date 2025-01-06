@@ -43,9 +43,13 @@ function evaluateHand(cards) {
   };
 
   const rankCounts = {};
-  for (const card of cards) {
-    rankCounts[card.rank] = (rankCounts[card.rank] || 0) + 1;
-  }
+  cards.forEach((card) => {
+    if (rankCounts[card.rank]) {
+      rankCounts[card.rank]++;
+    } else {
+      rankCounts[card.rank] = 1;
+    }
+  });
 
   let handValue = 0;
   let hasPair = false;
@@ -57,8 +61,8 @@ function evaluateHand(cards) {
     handValue += rankValues[rank] * count;
   }
 
-  if (hasThreeOfAKind) handValue += 50;
-  if (hasPair) handValue += 25;
+  if (hasThreeOfAKind) handValue += 30;
+  if (hasPair) handValue += 10;
 
   return handValue;
 }
@@ -83,10 +87,9 @@ function renderCards(player1, player2, facedownCard) {
 }
 
 function playGame() {
-  let deck = createDeck();
-  deck = shuffleDeck(deck);
+  let shuffleddeck = shuffleDeck(deck);
 
-  const { player1, player2, facedownCard } = dealCards(deck);
+  const { player1, player2, facedownCard } = dealCards(shuffleddeck);
 
   renderCards(player1, player2, facedownCard);
 
