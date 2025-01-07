@@ -36,18 +36,19 @@ function evaluateHand(cards) {
     8: 8,
     9: 9,
     10: 10,
-    Jack: 11,
-    Queen: 12,
-    King: 13,
-    Ace: 14,
+    11: 11,
+    12: 12,
+    13: 13,
+    14: 14,
   };
 
   const rankCounts = {};
   cards.forEach((card) => {
-    if (rankCounts[card.rank]) {
-      rankCounts[card.rank]++;
+    let ranks = parseInt(card.rank);
+    if (rankCounts[ranks]) {
+      rankCounts[ranks]++;
     } else {
-      rankCounts[card.rank] = 1;
+      rankCounts[ranks] = 1;
     }
   });
 
@@ -74,15 +75,13 @@ function dealCards(deck) {
   return { player1, player2, facedownCard };
 }
 
-function renderCards(player1, player2, facedownCard) {
+function renderCards(player1, player2) {
   const container = document.getElementById("game-container");
   container.innerHTML = `
     <h2>Player 1's Cards:</h2>
-    <p>${player1.map((card) => `${card.rank} of ${card.suit}`).join(", ")}</p>
+    <p>${player1.map((card) => `${card.number} of ${card.suit}`).join(", ")}</p>
     <h2>Player 2's Cards:</h2>
-    <p>${player2.map((card) => `${card.rank} of ${card.suit}`).join(", ")}</p>
-    <h2>Facedown Card:</h2>
-    <p>${facedownCard.rank} of ${facedownCard.suit}</p>
+    <p>${player2.map((card) => `${card.number} of ${card.suit}`).join(", ")}</p>
   `;
 }
 
@@ -98,6 +97,7 @@ function playGame() {
 
   console.log("Player 1's Hand Value:", player1HandValue);
   console.log("Player 2's Hand Value:", player2HandValue);
+  console.log(facedownCard.number);
 
   if (player1HandValue > player2HandValue) {
     console.log("Player 1 wins!");
