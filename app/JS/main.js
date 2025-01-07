@@ -61,8 +61,8 @@ function evaluateHand(cards) {
     handValue += rankValues[rank] * count;
   }
 
-  if (hasThreeOfAKind) handValue += 30;
-  if (hasPair) handValue += 10;
+  if (hasThreeOfAKind) handValue += 50;
+  if (hasPair) handValue += 25;
 
   return handValue;
 }
