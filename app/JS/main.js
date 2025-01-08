@@ -26,29 +26,12 @@ function shuffleDeck(deck) {
 }
 
 function evaluateHand(cards) {
-  const rankValues = {
-    2: 2,
-    3: 3,
-    4: 4,
-    5: 5,
-    6: 6,
-    7: 7,
-    8: 8,
-    9: 9,
-    10: 10,
-    11: 11,
-    12: 12,
-    13: 13,
-    14: 14,
-  };
-
   const rankCounts = {};
   cards.forEach((card) => {
-    let ranks = parseInt(card.rank);
-    if (rankCounts[ranks]) {
-      rankCounts[ranks]++;
+    if (rankCounts[card.rank]) {
+      rankCounts[card.rank]++;
     } else {
-      rankCounts[ranks] = 1;
+      rankCounts[card.rank] = 1;
     }
   });
 
@@ -56,14 +39,19 @@ function evaluateHand(cards) {
   let hasPair = false;
   let hasThreeOfAKind = false;
 
-  for (const [rank, count] of Object.entries(rankCounts)) {
+  cards.forEach((el) => {
+    const count = rankCounts[el.rank];
     if (count === 2) hasPair = true;
     if (count === 3) hasThreeOfAKind = true;
-    handValue += rankValues[rank] * count;
-  }
+    handValue += el.rank * count;
+  });
 
-  if (hasThreeOfAKind) handValue += 50;
-  if (hasPair) handValue += 25;
+  if (hasThreeOfAKind === true) {
+    handValue += 50;
+  }
+  if (hasPair === true) {
+    handValue += 25;
+  }
 
   return handValue;
 }
@@ -72,17 +60,34 @@ function dealCards(deck) {
   const player1 = [deck.pop(), deck.pop()];
   const player2 = [deck.pop(), deck.pop()];
   const facedownCard = deck.pop();
+  console.log(player1, player2, facedownCard);
   return { player1, player2, facedownCard };
 }
 
 function renderCards(player1, player2) {
-  const container = document.getElementById("game-container");
-  container.innerHTML = `
-    <h2>Player 1's Cards:</h2>
-    <p>${player1.map((card) => `${card.number} of ${card.suit}`).join(", ")}</p>
-    <h2>Player 2's Cards:</h2>
-    <p>${player2.map((card) => `${card.number} of ${card.suit}`).join(", ")}</p>
-  `;
+  const container = document.querySelector(".container");
+  player1.forEach((card) => {
+    container.insertAdjacentElement(
+      "beforeend",
+      `<h2>Player 1's Cards:</h2>
+      <p>${card.number} of ${card.suit}).join(", ")}</p>
+      <div class="card"><h3>${card.number} of ${card.suit}</h3>
+            <img class="img" src=${card.imageURL} alt="${card.altText}"></div>`
+    );
+  });
+  player2.forEach((card) => {
+    container.insertAdjacentElement(
+      "beforeend",
+      `<h2>Player 2's Cards:</h2>
+      <p>${card.number} of ${card.suit}).join(", ")}</p>
+      <div class="card"><h3>${card.number} of ${card.suit}</h3>
+            <img class="img" src=${card.imageURL} alt="${card.altText}"></div>`
+    );
+  });
+
+  /* `<h2>Player 2's Cards:</h2>
+  <p>${player2.map((card) => `${card.number} of ${card.suit}`).join(", ")}</p>`);
+   */
 }
 
 function playGame() {
