@@ -57,66 +57,77 @@ function evaluateHand(cards) {
 }
 
 function dealCards(deck) {
-  const player1 = [deck.pop(), deck.pop()];
-  const player2 = [deck.pop(), deck.pop()];
-  const facedownCard = deck.pop();
-  console.log(player1, player2, facedownCard);
-  return { player1, player2, facedownCard };
+  const dealtcards = [
+    deck.pop(),
+    deck.pop(),
+    deck.pop(),
+    deck.pop(),
+    deck.pop(),
+  ];
+
+  return dealtcards;
 }
 
-function renderCards(player1, player2) {
-  const container = document.querySelector(".container");
-  player1.forEach((card) => {
-    container.insertAdjacentElement(
+function renderCards(dealtcards) {
+  dealtcards.slice(0, 2).forEach((card) => {
+    document.querySelector("#left-container").insertAdjacentHTML(
       "beforeend",
-      `<h2>Player 1's Cards:</h2>
-      <p>${card.number} of ${card.suit}).join(", ")}</p>
+      `<p>${card.number} of ${card.suit}</p>
       <div class="card"><h3>${card.number} of ${card.suit}</h3>
             <img class="img" src=${card.imageURL} alt="${card.altText}"></div>`
     );
   });
-  player2.forEach((card) => {
-    container.insertAdjacentElement(
+  dealtcards.slice(2, 4).forEach((card) => {
+    document.querySelector("#right-container").insertAdjacentHTML(
       "beforeend",
-      `<h2>Player 2's Cards:</h2>
-      <p>${card.number} of ${card.suit}).join(", ")}</p>
+      `<p>${card.number} of ${card.suit}</p>
       <div class="card"><h3>${card.number} of ${card.suit}</h3>
             <img class="img" src=${card.imageURL} alt="${card.altText}"></div>`
     );
   });
-
-  /* `<h2>Player 2's Cards:</h2>
-  <p>${player2.map((card) => `${card.number} of ${card.suit}`).join(", ")}</p>`);
-   */
+  dealtcards.slice(4, 5).forEach((card) => {
+    document.querySelector("#center-container").insertAdjacentHTML(
+      "beforeend",
+      `<p>${card.number} of ${card.suit}</p>
+      <div class="card"><h3>${card.number} of ${card.suit}</h3>
+            <img class="img" src=${card.imageURL} alt="${card.altText}"></div>`
+    );
+  });
 }
 
 function playGame() {
   let shuffleddeck = shuffleDeck(deck);
 
-  const { player1, player2, facedownCard } = dealCards(shuffleddeck);
+  const dealtcards = dealCards(shuffleddeck);
+  console.log(dealtcards);
 
-  renderCards(player1, player2, facedownCard);
+  renderCards(dealtcards);
 
-  const player1HandValue = evaluateHand([...player1, facedownCard]);
-  const player2HandValue = evaluateHand([...player2, facedownCard]);
+  const player1HandValue = evaluateHand([
+    dealtcards[0],
+    dealtcards[1],
+    dealtcards[4],
+  ]);
+  const player2HandValue = evaluateHand([
+    dealtcards[2],
+    dealtcards[3],
+    dealtcards[4],
+  ]);
 
   console.log("Player 1's Hand Value:", player1HandValue);
   console.log("Player 2's Hand Value:", player2HandValue);
-  console.log(facedownCard.number);
+  console.log(dealtcards[4].number);
 
+  let result;
   if (player1HandValue > player2HandValue) {
-    console.log("Player 1 wins!");
+    result = "Player 1 wins!";
   } else if (player2HandValue > player1HandValue) {
-    console.log("Player 2 wins!");
+    result = "Player 2 wins!";
   } else {
-    console.log("It's a tie!");
+    result = "It's a tie!";
   }
-}
 
-if (typeof document !== "undefined") {
-  const gameContainer = document.createElement("div");
-  gameContainer.id = "game-container";
-  document.body.appendChild(gameContainer);
+  console.log(result);
 }
 
 playGame();

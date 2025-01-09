@@ -1,15 +1,25 @@
-.container{
-    display: flex;
-    width: 90vw;
-    margin: 2rem auto;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-  }
+.container-wrapper {
+  display: flex;
+  width: 90vw;
+  justify-content: space-around;
+  margin: 2rem auto;
+}
+
+.container {
+  display: flex;
+  width: 30%;
+  margin: auto;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  justify-content: center;
+  text-align: center;
+}
+
 .card{
-    width: 27%;
-    height: 30rem;
+    width: 80%;
+    height: 20rem;
     border: 5px solid rgb(0, 0, 0);
     border-radius: 3rem;
     display: flex;
@@ -20,5 +30,5 @@
     text-align: center;
   }
 .img{
-    height: 80%;
+    height: 75%;
   }
