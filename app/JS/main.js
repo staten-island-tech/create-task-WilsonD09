@@ -3,20 +3,6 @@ import { deck } from "./deck";
 
 console.log(deck);
 
-function createCards(list) {
-  const cardList = [];
-  list.forEach((el, index) => {
-    cardList.push(`<div class="card" id="card-${index}"><h3>${el.number} of ${el.suit}</h3>
-            <img class="img" src=${el.imageURL} alt="${el.altText}"></div>`);
-  });
-  console.log(cardList);
-}
-createCards(deck);
-
-let allCards = [];
-deck.forEach((el) => allCards.push(`${el.number} of ${el.suit}`));
-console.log(allCards);
-
 function shuffleDeck(deck) {
   for (let i = deck.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -95,8 +81,41 @@ function renderCards(dealtcards) {
   });
 }
 
+let player1Money = 1000;
+
+function updateBalanceDisplay() {
+  const balanceElement = document.querySelector("#balance-display");
+  balanceElement.textContent = `Player 1 Balance: $${player1Money}`;
+}
+updateBalanceDisplay();
+function placeBet(betAmount) {
+  if (betAmount > player1Money) {
+    alert("Player 1 does not have enough money to bet that amount.");
+    return false;
+  }
+  player1Money -= betAmount;
+  updateBalanceDisplay();
+  console.log(`Player 1 bets $${betAmount}. Remaining money: $${player1Money}`);
+  return betAmount;
+}
+
+function resolveBet(betAmount, winner) {
+  if (winner === "Player 1") {
+    player1Money = player1Money + betAmount * 2;
+    console.log(`Player 1 wins the bet! New balance: $${player1Money}`);
+  } else if (winner === "The House") {
+    console.log("The House wins the bet.");
+  } else if (winner === "It's a tie!") {
+    player1Money = player1Money + parseInt(betAmount);
+    console.log(`It's a tie! Bet refunded. New balance: $${player1Money}`);
+  }
+  console.log(betAmount);
+  updateBalanceDisplay();
+}
+
 function playGame() {
-  let shuffleddeck = shuffleDeck(deck);
+  const newDeck = [...deck];
+  let shuffleddeck = shuffleDeck(newDeck);
 
   const dealtcards = dealCards(shuffleddeck);
   console.log(dealtcards);
@@ -108,26 +127,40 @@ function playGame() {
     dealtcards[1],
     dealtcards[4],
   ]);
-  const player2HandValue = evaluateHand([
+  const houseHandValue = evaluateHand([
     dealtcards[2],
     dealtcards[3],
     dealtcards[4],
   ]);
 
+  const betInput = document.querySelector("#bet-input").value;
+
   console.log("Player 1's Hand Value:", player1HandValue);
-  console.log("Player 2's Hand Value:", player2HandValue);
+  console.log("The House's Hand Value:", houseHandValue);
   console.log(dealtcards[4].number);
 
   let result;
-  if (player1HandValue > player2HandValue) {
-    result = "Player 1 wins!";
-  } else if (player2HandValue > player1HandValue) {
-    result = "Player 2 wins!";
-  } else {
+  if (player1HandValue > houseHandValue) {
+    result = "Player 1";
+  } else if (houseHandValue > player1HandValue) {
+    result = "The House";
+  } else if (houseHandValue === player1HandValue) {
     result = "It's a tie!";
   }
+  const betAmount = placeBet(betInput);
+  if (betAmount) resolveBet(betInput, result);
 
   console.log(result);
+  console.log(player1Money);
 }
 
-playGame();
+document.querySelector("#play-button").addEventListener("click", (event) => {
+  event.preventDefault();
+  document.querySelector("#left-container").innerHTML =
+    "<h2>Player 1's Cards:</h2>";
+  document.querySelector("#right-container").innerHTML =
+    "<h2>The House's Cards:</h2>";
+  document.querySelector("#center-container").innerHTML =
+    "</div><h2>Facedown Card:</h2>";
+  playGame();
+});
