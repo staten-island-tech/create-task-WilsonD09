@@ -58,25 +58,39 @@ function renderCards(dealtcards) {
   dealtcards.slice(0, 2).forEach((card) => {
     document.querySelector("#left-container").insertAdjacentHTML(
       "beforeend",
-      `<p>${card.number} of ${card.suit}</p>
+      `<h3>${card.number} of ${card.suit}</h3>
       <div class="card"><h3>${card.number} of ${card.suit}</h3>
             <img class="img" src=${card.imageURL} alt="${card.altText}"></div>`
     );
   });
-  dealtcards.slice(2, 4).forEach((card) => {
+
+  for (let i = 0; i < 2; i++) {
     document.querySelector("#right-container").insertAdjacentHTML(
       "beforeend",
-      `<p>${card.number} of ${card.suit}</p>
-      <div class="card"><h3>${card.number} of ${card.suit}</h3>
-            <img class="img" src=${card.imageURL} alt="${card.altText}"></div>`
+      `<h3>Facedown Card</h3>
+      <div class="card"><h3>Facedown Card</h3>
+            <img class="img" src=backcard.png alt="facedown card"></div>`
     );
-  });
+  }
   dealtcards.slice(4, 5).forEach((card) => {
     document.querySelector("#center-container").insertAdjacentHTML(
       "beforeend",
-      `<p>${card.number} of ${card.suit}</p>
+      `<h3>${card.number} of ${card.suit}</h3>
       <div class="card"><h3>${card.number} of ${card.suit}</h3>
-            <img class="img" src=${card.imageURL} alt="${card.altText}"></div>`
+      <img class="img" src=${card.imageURL} alt="${card.altText}"></div>`
+    );
+  });
+}
+
+function renderHouse(dealtcards) {
+  document.querySelector("#right-container").innerHTML =
+    "<h2>The House's Cards:</h2>";
+  dealtcards.slice(2, 4).forEach((card) => {
+    document.querySelector("#right-container").insertAdjacentHTML(
+      "beforeend",
+      `<h3>${card.number} of ${card.suit}</h3>
+      <div class="card"><h3>${card.number} of ${card.suit}</h3>
+      <img class="img" src=${card.imageURL} alt="${card.altText}"></div>`
     );
   });
 }
@@ -100,10 +114,10 @@ function placeBet(betAmount) {
 }
 
 function resolveBet(betAmount, winner) {
-  if (winner === "Player 1") {
+  if (winner === "Player 1 Wins!") {
     player1Money = player1Money + betAmount * 2;
     console.log(`Player 1 wins the bet! New balance: $${player1Money}`);
-  } else if (winner === "The House") {
+  } else if (winner === "The House Wins!") {
     console.log("The House wins the bet.");
   } else if (winner === "It's a tie!") {
     player1Money = player1Money + parseInt(betAmount);
@@ -113,7 +127,7 @@ function resolveBet(betAmount, winner) {
   updateBalanceDisplay();
 }
 
-function playGame() {
+function setupGame() {
   const newDeck = [...deck];
   let shuffleddeck = shuffleDeck(newDeck);
 
@@ -121,7 +135,10 @@ function playGame() {
   console.log(dealtcards);
 
   renderCards(dealtcards);
+  return dealtcards;
+}
 
+function playGame(dealtcards) {
   const player1HandValue = evaluateHand([
     dealtcards[0],
     dealtcards[1],
@@ -141,9 +158,9 @@ function playGame() {
 
   let result;
   if (player1HandValue > houseHandValue) {
-    result = "Player 1";
+    result = "Player 1 Wins!";
   } else if (houseHandValue > player1HandValue) {
-    result = "The House";
+    result = "The House Wins!";
   } else if (houseHandValue === player1HandValue) {
     result = "It's a tie!";
   }
@@ -152,15 +169,30 @@ function playGame() {
 
   console.log(result);
   console.log(player1Money);
+  alert(result);
 }
+
+let dealtcards;
+document
+  .querySelector("#start-button")
+  .addEventListener("click", function (event) {
+    event.preventDefault();
+    document.querySelector("#left-container").innerHTML =
+      "<h2>Player 1's Cards:</h2>";
+    document.querySelector("#right-container").innerHTML =
+      "<h2>The House's Cards:</h2>";
+    document.querySelector("#center-container").innerHTML =
+      "</div><h2>River Card:</h2>";
+    dealtcards = setupGame();
+  });
 
 document.querySelector("#play-button").addEventListener("click", (event) => {
   event.preventDefault();
-  document.querySelector("#left-container").innerHTML =
-    "<h2>Player 1's Cards:</h2>";
-  document.querySelector("#right-container").innerHTML =
-    "<h2>The House's Cards:</h2>";
-  document.querySelector("#center-container").innerHTML =
-    "</div><h2>Facedown Card:</h2>";
-  playGame();
+  if (!dealtcards) {
+    alert("Please start the game first.");
+    return;
+  }
+  renderHouse(dealtcards);
+  playGame(dealtcards);
+  dealtcards = null;
 });

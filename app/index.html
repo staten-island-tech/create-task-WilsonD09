@@ -8,16 +8,21 @@
   </head>
   <body>
     <h1>Simple Poker</h1>
+    <button id="start-button">Start</button>
     <div class="container-wrapper">
       <div id="balance-display"></div>
-      <input type="number" id="bet-input" placeholder="Enter your bet amount" />
+      <input
+        type="number"
+        id="bet-input"
+        placeholder="Bet Amount (0 to fold)"
+      />
       <button id="play-button">play</button>
       <div class="container" id="left-container">
         <h2>Player 1's Cards:</h2>
       </div>
       <div class="container" id="center-container">
         <div id="balance-display"></div>
-        <h2>Facedown Card:</h2>
+        <h2>River Card:</h2>
       </div>
       <div class="container" id="right-container">
         <h2>The House's Cards:</h2>
