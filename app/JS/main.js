@@ -186,7 +186,7 @@ document
     dealtcards = setupGame();
   });
 
-document.querySelector("#play-button").addEventListener("click", (event) => {
+function handlePlayButtonClick(event) {
   event.preventDefault();
   if (!dealtcards) {
     alert("Please start the game first.");
@@ -195,4 +195,8 @@ document.querySelector("#play-button").addEventListener("click", (event) => {
   renderHouse(dealtcards);
   playGame(dealtcards);
   dealtcards = null;
-});
+}
+
+document
+  .querySelector("#play-button")
+  .addEventListener("click", handlePlayButtonClick);
